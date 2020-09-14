@@ -1,0 +1,7 @@
+{
+    "contract": "../contract/bin/Debug/netstandard2.1/Loyalty.nef",
+    "operation": "mint",
+    "args": [
+        10000
+    ]
+}

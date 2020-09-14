@@ -1,0 +1,8 @@
+{
+    "contract": "../contract/bin/Debug/netstandard2.1/Loyalty.nef",
+    "operation": "transfer",
+    "args": [
+        "@NbvD5YsfikQ4hrWQYkg3xfMsVjvspQXbbg",
+        5000
+    ]
+}

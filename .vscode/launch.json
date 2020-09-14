@@ -7,12 +7,48 @@
         {
             "name": "totalSupply",
             "type": "neo-contract",
-            "preLaunchTask": "build",
             "request": "launch",
             "program": "${workspaceFolder}/contract/bin/Debug/netstandard2.1/Loyalty.nef",
             "operation": "totalSupply",
-            "args": [],
-            "storage": [],
+            "runtime": {
+                "witnesses": {
+                    "check-result": true
+                }
+            }
+        },
+        {
+            "name": "totalSupply mint",
+            "type": "neo-contract",
+            "request": "launch",
+            "program": "${workspaceFolder}/contract/bin/Debug/netstandard2.1/Loyalty.nef",
+            "operation": "totalSupply",
+            "checkpoint": "${workspaceFolder}/checkpoints/transfer.nxp3-checkpoint",
+            "runtime": {
+                "witnesses": {
+                    "check-result": true
+                }
+            }
+        },
+        {
+            "name": "totalSupply transfer",
+            "type": "neo-contract",
+            "request": "launch",
+            "program": "${workspaceFolder}/contract/bin/Debug/netstandard2.1/Loyalty.nef",
+            "operation": "totalSupply",
+            "checkpoint": "${workspaceFolder}/checkpoints/burn.nxp3-checkpoint",
+            "runtime": {
+                "witnesses": {
+                    "check-result": true
+                }
+            }
+        },
+        {
+            "name": "totalSupply burn",
+            "type": "neo-contract",
+            "request": "launch",
+            "program": "${workspaceFolder}/contract/bin/Debug/netstandard2.1/Loyalty.nef",
+            "operation": "totalSupply",
+            "checkpoint": "${workspaceFolder}/checkpoints/after-burn.nxp3-checkpoint",
             "runtime": {
                 "witnesses": {
                     "check-result": true
@@ -22,19 +58,44 @@
         {
             "name": "mint",
             "type": "neo-contract",
-            "preLaunchTask": "build",
             "request": "launch",
             "program": "${workspaceFolder}/contract/bin/Debug/netstandard2.1/Loyalty.nef",
-            "operation": "mint",
-            "args": [1000],
+            "invoke-file": "${workspaceFolder}/invoke-files/mint.neo-invoke.json",
+            "checkpoint": "${workspaceFolder}/checkpoints/mint.nxp3-checkpoint",
             "signers": ["NS9xt9eyP2AxxAbgzSct4nBRwdRo2eQ3h1"],
-            "storage": [],
+            "runtime": {
+                "witnesses": {
+                    "check-result": true
+                }
+            }
+        },
+        {
+            "name": "transfer",
+            "type": "neo-contract",
+            "request": "launch",
+            "program": "${workspaceFolder}/contract/bin/Debug/netstandard2.1/Loyalty.nef",
+            "invoke-file": "${workspaceFolder}/invoke-files/transfer.neo-invoke.json",
+            "checkpoint": "${workspaceFolder}/checkpoints/transfer.nxp3-checkpoint",
+            "signers": ["NS9xt9eyP2AxxAbgzSct4nBRwdRo2eQ3h1"],
+            "runtime": {
+                "witnesses": {
+                    "check-result": true
+                }
+            }
+        },
+        {
+            "name": "burn",
+            "type": "neo-contract",
+            "request": "launch",
+            "program": "${workspaceFolder}/contract/bin/Debug/netstandard2.1/Loyalty.nef",
+            "invoke-file": "${workspaceFolder}/invoke-files/burn.neo-invoke.json",
+            "checkpoint": "${workspaceFolder}/checkpoints/burn.nxp3-checkpoint",
+            "signers": ["NS9xt9eyP2AxxAbgzSct4nBRwdRo2eQ3h1"],
             "runtime": {
                 "witnesses": {
                     "check-result": true
                 }
             }
         }
-
     ]
 }
