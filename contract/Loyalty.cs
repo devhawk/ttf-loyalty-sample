@@ -1,6 +1,9 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Numerics;
 using Neo.SmartContract.Framework;
+using Neo.SmartContract.Framework.Services.Neo;
+using Neo.SmartContract.Framework.Services.System;
 
 namespace LoyaltySample
 {
@@ -10,14 +13,21 @@ namespace LoyaltySample
     [Features(ContractFeatures.HasStorage | ContractFeatures.Payable)]
     public partial class LoyaltyToken : SmartContract
     {
+        [DisplayName("Transfer")]
+        public static event Action<byte[], byte[], BigInteger> OnTransfer;
+
         // default TTF Token operations
         public static string Name() => "Loyalty Sample Token";
 
         public static string Symbol() => "LST";
 
-        public static BigInteger TotalSupply() => 0;
+        public static BigInteger TotalSupply() => TotalSupplyStorage.Get();
 
-        public static BigInteger GetBalance(byte[] account) => 0;
+        public static BigInteger GetBalance(byte[] account)
+        {
+            if (!ValidateAddress(account)) throw new Exception("Invalid account address");
+            return TokenStorage.Get(account);
+        }
 
         // Indivisible behavior
         public static ulong Decimals() => 0;
@@ -25,21 +35,39 @@ namespace LoyaltySample
         // Mintable Behavior
         public static void Mint(BigInteger quantity) 
         {
-            // Need to verify caller is in the Minters role
+            Transaction tx = (Transaction)ExecutionEngine.ScriptContainer;
+            MintTo(tx.Sender, quantity);
         }
 
         public static void MintTo(byte[] account, BigInteger quantity) 
         {
+            if (!ValidateAddress(account)) throw new Exception("Invalid to account");
+            if (quantity <= 0) throw new Exception("Quantity must be greater than 0.");
+            if (!IsPayable(account)) throw new Exception("to account cannot receive.");
+
             // Need to verify caller is in the Minters role
+
+            TokenStorage.Increase(account, quantity);
+            TotalSupplyStorage.Increase(quantity);
+            OnTransfer(null, account, quantity);
         }
 
         // Burnable behavior
         public static void Burn(BigInteger quantity) 
         {
+            Transaction tx = (Transaction)ExecutionEngine.ScriptContainer;
+            BurnFrom(tx.Sender, quantity);
         }
 
         public static void BurnFrom(byte[] account, BigInteger quantity) 
         {
+            if (!ValidateAddress(account)) throw new Exception("Invalid to account");
+            if (quantity <= 0) throw new Exception("Quantity must be greater than 0.");
+            if (TokenStorage.Get(account) < quantity) throw new Exception("Insufficient balance.");
+
+            TokenStorage.Reduce(account, quantity);
+            TotalSupplyStorage.Reduce(quantity);
+            OnTransfer(account, null, quantity);
         }
 
         // Minters Roles behavior
@@ -48,8 +76,12 @@ namespace LoyaltySample
         Notes:
             base Roles behavior defines a role property + GetRoleMembers method.
             Loyalty definition renames GetRoleMembers as GetMinters.
-            Seems like the expected api model is contract.Minters.GetRoleMembers, but that doesn't work in Neo or GRPC
-            I would think that "RoleMember" should be replaced with "Minters" across the entire Roles API, not just GetRoleMembers
+            I've swapped "RoleMember" for "Minter" across the entire Roles behavior method
+            If a given contract had multiple roles, then I could using the more generic
+            "[Get/Add/Remove/Is]RoleMember" shape, but not for a contract with a single
+            role. Also, it's not clear how [Add/Remove]RoleMember is supposed to be
+            secured. Should there also be an "administrators" role? Is only the 
+            contract owner allowed to add/remove Role Members?
         */
 
         public static object GetMinters() 
@@ -58,21 +90,21 @@ namespace LoyaltySample
             return null;
         }
 
-        public static void AddRoleMember(string role, byte[] account)
+        public static void AddMinter(byte[] account)
         {
         }
 
-        public static void RemoveRoleMember(string role, byte[] account)
+        public static void RemoveMinter(byte[] account)
         {
         }
 
-        public static bool IsInRole(string role, byte[] account)
+        public static bool IsMinter(byte[] account)
         {
             return false;
         }
 
         // RoleCheck is defined to be "Internal invocation", so I've marked it private
-        private static bool RoleCheck(byte[] account)
+        private static bool MinterRoleCheck(byte[] account)
         {
             return false;
         }
@@ -102,10 +134,29 @@ namespace LoyaltySample
         // Transfer behavior
         public static void Transfer(byte[] toAccount, BigInteger quantity) 
         {
+            Transaction tx = (Transaction)ExecutionEngine.ScriptContainer;
+            TransferFrom(tx.Sender, toAccount, quantity);
         }
 
         public static void TransferFrom(byte[] fromAccount, byte[] toAccount, BigInteger quantity) 
         {
+            if (!ValidateAddress(fromAccount)) throw new Exception("Invalid from account");
+            if (!ValidateAddress(toAccount)) throw new Exception("Invalid to account");
+            if (quantity <= 0) throw new Exception("Quantity must be greater than 0.");
+            if (!IsPayable(toAccount)) throw new Exception("to account cannot receive.");
+            if (!Runtime.CheckWitness(fromAccount) && !fromAccount.Equals(ExecutionEngine.CallingScriptHash)) throw new Exception("No authorization.");
+            if (TokenStorage.Get(fromAccount) < quantity) throw new Exception("Insufficient balance.");
+            if (fromAccount != toAccount)
+            {
+                TokenStorage.Reduce(fromAccount, quantity);
+                TokenStorage.Increase(toAccount, quantity);
+                OnTransfer(fromAccount, toAccount, quantity);
+            }
         }   
+
+        // other helper functions
+
+        private static bool ValidateAddress(byte[] address) => address.Length == 20 && address.ToBigInteger() != 0;
+        private static bool IsPayable(byte[] address) => Blockchain.GetContract(address)?.IsPayable ?? true;
     }
 }
