@@ -25,10 +25,12 @@ namespace LoyaltySample
         // Mintable Behavior
         public static void Mint(BigInteger quantity) 
         {
+            // Need to verify caller is in the Minters role
         }
 
         public static void MintTo(byte[] account, BigInteger quantity) 
         {
+            // Need to verify caller is in the Minters role
         }
 
         // Burnable behavior
@@ -41,6 +43,15 @@ namespace LoyaltySample
         }
 
         // Minters Roles behavior
+
+        /*
+        Notes:
+            base Roles behavior defines a role property + GetRoleMembers method.
+            Loyalty definition renames GetRoleMembers as GetMinters.
+            Seems like the expected api model is contract.Minters.GetRoleMembers, but that doesn't work in Neo or GRPC
+            I would think that "RoleMember" should be replaced with "Minters" across the entire Roles API, not just GetRoleMembers
+        */
+
         public static object GetMinters() 
         {
             // TODO: what's the right way to return a list of accounts?
@@ -68,6 +79,17 @@ namespace LoyaltySample
 
 
         // Delegable
+
+        /*
+        Notes:
+            This API seems under specified. The description of Allowance references
+            "A Request by a party or account to the owner of a token(s)" but the owner
+            is not specified as a parameter. ApproveAllowance is even odder, suggesting
+            the AllowanceRequest could be forwarded to other parties and that "When all
+            Approvals are obtained, an AllowanceResponse could be sent." But I don't
+            understand how that would work on a block chain. Are we invoking other 
+            contracts or getting approval from human beings? 
+        */
         public static void Allowance(BigInteger quantity)
         {
         }
