@@ -19,7 +19,7 @@ namespace LoyaltySample
         public static void Add(byte[] account)
         {
             var map = GetMap();
-            if (Check(map, account) == -1)
+            if (Find(map, account) == -1)
             {
                 map.Add(account);
                 PutMap(map);
@@ -29,7 +29,7 @@ namespace LoyaltySample
         public static void Remove(byte[] account)
         {
             var map = GetMap();
-            var i = Check(map, account);
+            var i = Find(map, account);
             if (i != -1)
             {
                 map.RemoveAt(i);
@@ -37,7 +37,7 @@ namespace LoyaltySample
             }
         }
 
-        private static int Check(NeoArray<byte[]> map, byte[] account)
+        private static int Find(NeoArray<byte[]> map, byte[] account)
         {
             for (int i = 0; i < map.Count; i++)
             {
@@ -53,7 +53,7 @@ namespace LoyaltySample
         public static bool Check(byte[] account)
         {
             var map = GetMap();
-            return Check(map, account) >= 0;
+            return Find(map, account) >= 0;
         }
 
         public static byte[][] Get()
