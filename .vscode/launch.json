@@ -96,6 +96,36 @@
                     "check-result": true
                 }
             }
+        },
+        {
+            "name": "burnFrom",
+            "type": "neo-contract",
+            "request": "launch",
+            "program": "${workspaceFolder}/contract/bin/Debug/netstandard2.1/Loyalty.nef",
+            "operation": "burnFrom",
+            "args": ["@NS9xt9eyP2AxxAbgzSct4nBRwdRo2eQ3h1", 50],
+            "checkpoint": "${workspaceFolder}/checkpoints/burn.nxp3-checkpoint",
+            "signers": ["NetmttV4w9C4FJJ3stAbTsPm1ET4CepXk4"],
+            "runtime": {
+                "witnesses": {
+                    "check-result": true
+                }
+            }
+        },
+        {
+            "name": "burnFrom 2",
+            "type": "neo-contract",
+            "request": "launch",
+            "program": "${workspaceFolder}/contract/bin/Debug/netstandard2.1/Loyalty.nef",
+            "operation": "burnFrom",
+            "args": ["@NS9xt9eyP2AxxAbgzSct4nBRwdRo2eQ3h1", 50],
+            "checkpoint": "${workspaceFolder}/checkpoints/burn.nxp3-checkpoint",
+            "signers": ["NS9xt9eyP2AxxAbgzSct4nBRwdRo2eQ3h1"],
+            "runtime": {
+                "witnesses": {
+                    "check-result": true
+                }
+            }
         }
     ]
 }

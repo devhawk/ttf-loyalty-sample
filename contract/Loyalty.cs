@@ -63,6 +63,7 @@ namespace LoyaltySample
         {
             if (!ValidateAddress(account)) throw new Exception("Invalid to account");
             if (quantity <= 0) throw new Exception("Quantity must be greater than 0.");
+            if (!Runtime.CheckWitness(account) && !account.Equals(ExecutionEngine.CallingScriptHash)) throw new Exception("No authorization.");
             if (TokenStorage.Get(account) < quantity) throw new Exception("Insufficient balance.");
 
             TokenStorage.Reduce(account, quantity);
