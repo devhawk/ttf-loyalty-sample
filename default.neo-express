@@ -87,6 +87,23 @@
           }
         }
       ]
+    },
+    {
+      "name": "owen",
+      "accounts": [
+        {
+          "private-key": "bb089dbf5067d4f3e9689026d76bd90ab47376a1138703f3fee4eb7419f1cfae",
+          "script-hash": "NSjm9CGDs2P6e32RmEfbxGouLHtBEWY6Vj",
+          "label": null,
+          "is-default": true,
+          "contract": {
+            "script": "0c21027c89dcf286e5860fa3abb391a46bb73256cdd9be721848728a82a075359ed84d0b4195440d78",
+            "parameters": [
+              "Signature"
+            ]
+          }
+        }
+      ]
     }
   ],
   "contracts": []

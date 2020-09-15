@@ -10,24 +10,15 @@
             "request": "launch",
             "program": "${workspaceFolder}/contract/bin/Debug/netstandard2.1/Loyalty.nef",
             "operation": "totalSupply",
-            "runtime": {
-                "witnesses": {
-                    "check-result": true
-                }
-            }
+            "checkpoint": "${workspaceFolder}/checkpoints/deployed.nxp3-checkpoint",
         },
         {
-            "name": "totalSupply mint",
+            "name": "totalSupply minted",
             "type": "neo-contract",
             "request": "launch",
             "program": "${workspaceFolder}/contract/bin/Debug/netstandard2.1/Loyalty.nef",
             "operation": "totalSupply",
-            "checkpoint": "${workspaceFolder}/checkpoints/transfer.nxp3-checkpoint",
-            "runtime": {
-                "witnesses": {
-                    "check-result": true
-                }
-            }
+            "checkpoint": "${workspaceFolder}/checkpoints/minted.nxp3-checkpoint",
         },
         {
             "name": "totalSupply transfer",
@@ -35,12 +26,7 @@
             "request": "launch",
             "program": "${workspaceFolder}/contract/bin/Debug/netstandard2.1/Loyalty.nef",
             "operation": "totalSupply",
-            "checkpoint": "${workspaceFolder}/checkpoints/burn.nxp3-checkpoint",
-            "runtime": {
-                "witnesses": {
-                    "check-result": true
-                }
-            }
+            "checkpoint": "${workspaceFolder}/checkpoints/transfered.nxp3-checkpoint",
         },
         {
             "name": "totalSupply burn",
@@ -48,12 +34,7 @@
             "request": "launch",
             "program": "${workspaceFolder}/contract/bin/Debug/netstandard2.1/Loyalty.nef",
             "operation": "totalSupply",
-            "checkpoint": "${workspaceFolder}/checkpoints/after-burn.nxp3-checkpoint",
-            "runtime": {
-                "witnesses": {
-                    "check-result": true
-                }
-            }
+            "checkpoint": "${workspaceFolder}/checkpoints/burned.nxp3-checkpoint",
         },
         {
             "name": "mint",
@@ -61,13 +42,8 @@
             "request": "launch",
             "program": "${workspaceFolder}/contract/bin/Debug/netstandard2.1/Loyalty.nef",
             "invoke-file": "${workspaceFolder}/invoke-files/mint.neo-invoke.json",
-            "checkpoint": "${workspaceFolder}/checkpoints/mint.nxp3-checkpoint",
+            "checkpoint": "${workspaceFolder}/checkpoints/minter-added.nxp3-checkpoint",
             "signers": ["NS9xt9eyP2AxxAbgzSct4nBRwdRo2eQ3h1"],
-            "runtime": {
-                "witnesses": {
-                    "check-result": true
-                }
-            }
         },
         {
             "name": "transfer",
@@ -75,13 +51,8 @@
             "request": "launch",
             "program": "${workspaceFolder}/contract/bin/Debug/netstandard2.1/Loyalty.nef",
             "invoke-file": "${workspaceFolder}/invoke-files/transfer.neo-invoke.json",
-            "checkpoint": "${workspaceFolder}/checkpoints/transfer.nxp3-checkpoint",
+            "checkpoint": "${workspaceFolder}/checkpoints/minted.nxp3-checkpoint",
             "signers": ["NS9xt9eyP2AxxAbgzSct4nBRwdRo2eQ3h1"],
-            "runtime": {
-                "witnesses": {
-                    "check-result": true
-                }
-            }
         },
         {
             "name": "burn",
@@ -89,13 +60,8 @@
             "request": "launch",
             "program": "${workspaceFolder}/contract/bin/Debug/netstandard2.1/Loyalty.nef",
             "invoke-file": "${workspaceFolder}/invoke-files/burn.neo-invoke.json",
-            "checkpoint": "${workspaceFolder}/checkpoints/burn.nxp3-checkpoint",
+            "checkpoint": "${workspaceFolder}/checkpoints/transfered.nxp3-checkpoint",
             "signers": ["NS9xt9eyP2AxxAbgzSct4nBRwdRo2eQ3h1"],
-            "runtime": {
-                "witnesses": {
-                    "check-result": true
-                }
-            }
         },
         {
             "name": "burnFrom",
@@ -104,13 +70,8 @@
             "program": "${workspaceFolder}/contract/bin/Debug/netstandard2.1/Loyalty.nef",
             "operation": "burnFrom",
             "args": ["@NS9xt9eyP2AxxAbgzSct4nBRwdRo2eQ3h1", 50],
-            "checkpoint": "${workspaceFolder}/checkpoints/burn.nxp3-checkpoint",
+            "checkpoint": "${workspaceFolder}/checkpoints/transfered.nxp3-checkpoint",
             "signers": ["NetmttV4w9C4FJJ3stAbTsPm1ET4CepXk4"],
-            "runtime": {
-                "witnesses": {
-                    "check-result": true
-                }
-            }
         },
         {
             "name": "burnFrom 2",
@@ -119,13 +80,28 @@
             "program": "${workspaceFolder}/contract/bin/Debug/netstandard2.1/Loyalty.nef",
             "operation": "burnFrom",
             "args": ["@NS9xt9eyP2AxxAbgzSct4nBRwdRo2eQ3h1", 50],
-            "checkpoint": "${workspaceFolder}/checkpoints/burn.nxp3-checkpoint",
+            "checkpoint": "${workspaceFolder}/checkpoints/transfered.nxp3-checkpoint",
             "signers": ["NS9xt9eyP2AxxAbgzSct4nBRwdRo2eQ3h1"],
-            "runtime": {
-                "witnesses": {
-                    "check-result": true
-                }
-            }
+        },
+        {
+            "name": "isMinter",
+            "type": "neo-contract",
+            "request": "launch",
+            "program": "${workspaceFolder}/contract/bin/Debug/netstandard2.1/Loyalty.nef",
+            "operation": "isMinter",
+            "args": ["@NS9xt9eyP2AxxAbgzSct4nBRwdRo2eQ3h1"],
+            // "checkpoint": "${workspaceFolder}/checkpoints/burn.nxp3-checkpoint",
+            // "signers": ["NetmttV4w9C4FJJ3stAbTsPm1ET4CepXk4"],
+        },
+        {
+            "name": "addMinter",
+            "type": "neo-contract",
+            "request": "launch",
+            "program": "${workspaceFolder}/contract/bin/Debug/netstandard2.1/Loyalty.nef",
+            "operation": "addMinter",
+            "args": ["@NS9xt9eyP2AxxAbgzSct4nBRwdRo2eQ3h1"],
+            "checkpoint": "${workspaceFolder}/checkpoints/deployed.nxp3-checkpoint",
+            "signers": ["NSjm9CGDs2P6e32RmEfbxGouLHtBEWY6Vj"],
         }
     ]
 }

@@ -13,6 +13,8 @@ namespace LoyaltySample
     [Features(ContractFeatures.HasStorage | ContractFeatures.Payable)]
     public partial class LoyaltyToken : SmartContract
     {
+        static readonly byte[] Owner = "NSjm9CGDs2P6e32RmEfbxGouLHtBEWY6Vj".ToScriptHash();
+
         [DisplayName("Transfer")]
         public static event Action<byte[], byte[], BigInteger> OnTransfer;
 
@@ -41,11 +43,11 @@ namespace LoyaltySample
 
         public static void MintTo(byte[] account, BigInteger quantity) 
         {
-            if (!ValidateAddress(account)) throw new Exception("Invalid to account");
+            Transaction tx = (Transaction)ExecutionEngine.ScriptContainer;
+            if (!MinterRoleStorage.Check(tx.Sender)) throw new Exception("Invalid minter");
+            if (!ValidateAddress(account)) throw new Exception("Invalid account");
             if (quantity <= 0) throw new Exception("Quantity must be greater than 0.");
             if (!IsPayable(account)) throw new Exception("to account cannot receive.");
-
-            // Need to verify caller is in the Minters role
 
             TokenStorage.Increase(account, quantity);
             TotalSupplyStorage.Increase(quantity);
@@ -93,22 +95,31 @@ namespace LoyaltySample
 
         public static void AddMinter(byte[] account)
         {
+            if (!IsOwner()) throw new Exception("No authorization.");
+            MinterRoleStorage.Add(account);
         }
 
         public static void RemoveMinter(byte[] account)
         {
+            if (!IsOwner()) throw new Exception("No authorization.");
+            MinterRoleStorage.Remove(account);
         }
 
         public static bool IsMinter(byte[] account)
         {
-            return false;
+            return MinterRoleStorage.Check(account);
         }
 
         // RoleCheck is defined to be "Internal invocation", so I've marked it private
-        private static bool MinterRoleCheck(byte[] account)
-        {
-            return false;
-        }
+        /*
+        Notes: 
+            MinterRoleCheck seems unnessassary, so I've commented it out
+        */
+
+        // private static bool MinterRoleCheck(byte[] account)
+        // {
+        //     return false;
+        // }
 
 
         // Delegable
@@ -155,9 +166,27 @@ namespace LoyaltySample
             }
         }   
 
+        // Neo contract management operations
+
+        public static bool Update(byte[] script, string manifest)
+        {
+            if (!IsOwner()) throw new Exception("No authorization.");
+            if (script.Length == 0 && manifest.Length == 0) return false;
+            Contract.Update(script, manifest);
+            return true;
+        }
+
+        public static bool Destroy()
+        {
+            if (!IsOwner()) throw new Exception("No authorization.");
+            Contract.Destroy();
+            return true;
+        }
+
         // other helper functions
 
         private static bool ValidateAddress(byte[] address) => address.Length == 20 && address.ToBigInteger() != 0;
         private static bool IsPayable(byte[] address) => Blockchain.GetContract(address)?.IsPayable ?? true;
+        internal static bool IsOwner() => Runtime.CheckWitness(Owner);
     }
 }

@@ -1,0 +1,7 @@
+{
+    "contract": "../contract/bin/Debug/netstandard2.1/Loyalty.nef",
+    "operation": "addMinter",
+    "args": [
+        "@NS9xt9eyP2AxxAbgzSct4nBRwdRo2eQ3h1"
+    ]
+}

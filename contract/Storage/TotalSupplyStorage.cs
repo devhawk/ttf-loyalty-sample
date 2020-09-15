@@ -4,7 +4,6 @@ using Neo.SmartContract.Framework.Services.Neo;
 
 namespace LoyaltySample
 {
-
     public static class TotalSupplyStorage
     {
         public static void Increase(BigInteger value) => Put(Get() + value);
