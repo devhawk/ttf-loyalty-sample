@@ -90,8 +90,16 @@
             "program": "${workspaceFolder}/contract/bin/Debug/netstandard2.1/Loyalty.nef",
             "operation": "isMinter",
             "args": ["@NS9xt9eyP2AxxAbgzSct4nBRwdRo2eQ3h1"],
-            // "checkpoint": "${workspaceFolder}/checkpoints/burn.nxp3-checkpoint",
-            // "signers": ["NetmttV4w9C4FJJ3stAbTsPm1ET4CepXk4"],
+            "checkpoint": "${workspaceFolder}/checkpoints/minter-added.nxp3-checkpoint",
+        },
+        {
+            "name": "getMinters",
+            "type": "neo-contract",
+            "request": "launch",
+            "program": "${workspaceFolder}/contract/bin/Debug/netstandard2.1/Loyalty.nef",
+            "operation": "getMinters",
+            "args": [],
+            "checkpoint": "${workspaceFolder}/checkpoints/minter-added.nxp3-checkpoint",
         },
         {
             "name": "addMinter",

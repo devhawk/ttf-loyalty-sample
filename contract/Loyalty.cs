@@ -87,10 +87,9 @@ namespace LoyaltySample
             contract owner allowed to add/remove Role Members?
         */
 
-        public static object GetMinters() 
+        public static byte[][] GetMinters() 
         {
-            // TODO: what's the right way to return a list of accounts?
-            return null;
+            return MinterRoleStorage.Get();
         }
 
         public static void AddMinter(byte[] account)
